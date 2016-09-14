@@ -1,0 +1,133 @@
+<html>
+<head>
+    {% block head %}
+        <meta charset='utf-8'>
+        {#   <link rel="stylesheet" href="style.css" />#}
+        <title>{% block title %}{% endblock %}</title>
+    {% endblock %}
+    <style>
+        html {
+            height: 100%;
+            background: aliceblue;
+        }
+
+        article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
+            display: block;
+        }
+
+        body {
+            font: 12px/18px Arial, sans-serif;
+            width: 100%;
+            height: 100%;
+        }
+
+        table {
+            width: 600px;
+            margin: auto;
+        {#  border: 1px solid black;  #}
+        }
+
+        .wrapper {
+            width: 600px;
+            margin: 0 auto;
+            min-height: 100%;
+            height: auto !important;
+            height: 100%;
+        }
+
+        /* Header
+        -----------------------------------------------------------------------------*/
+        .header {
+            height: 50px;
+            background: lightblue;
+        {#  text-align: center;#}
+        }
+
+        /* Middle
+        -----------------------------------------------------------------------------*/
+        .content {
+            padding: 0 0 100px;
+        {#  text-align: center;#}
+        }
+
+        /* Footer
+        -----------------------------------------------------------------------------*/
+        .footer {
+            width: 600px;
+            margin: -100px auto 0;
+            height: 50px;
+            background: #BFF08E;
+            position: relative;
+            bottom: 0;
+            text-align: center;
+        }
+
+        div.comment {
+            text-align: left;
+            width: auto;
+            min-height: 20px;
+            border: 1px solid #93B4D9;
+            padding: 5px;
+            background: #CADEF4;
+            font-family: arial;
+            font-size: 16px;
+            margin: 15px;
+            word-wrap: break-word;
+        }
+
+        div.info {
+            text-align: right;
+            width: 100%;
+            min-height: 10px;
+        {#        border:1px solid #93B4D9;#} padding: 0px;
+            background: #CADEF4;
+            font-family: arial;
+            font-size: 9px;
+            margin: -5px;
+
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="wrapper">
+    <header class="header">
+        {% block header %}
+
+            <table>
+                {% if user.is_authenticated %}
+                    <tr>
+                        <td> Welcome, <a href="#"><b>{{ user.username }}</b></a>.</td>
+                        <td><a href="/exit">Logout</a></td>
+                        <td align="right"><a href="/admin">Admin page</a></td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td><a href="/register">Register</a></td>
+                    </tr>
+                    <tr>
+                        <td align="left"><a href="/login">Login</a></td>
+
+                        </td>
+                    </tr>
+                {% endif %}
+            </table>
+
+        {% endblock %}
+    </header><!-- .header-->
+
+    <main class="content">
+        {% block content %}
+        {% endblock %}
+    </main><!-- .content -->
+
+</div><!-- .wrapper -->
+
+<footer class="footer">
+    {% block footer %}
+        SKYnv 2015.
+    {% endblock %}
+</footer><!-- .footer -->
+</body>
+</html>

@@ -1,0 +1,18 @@
+{% extends "mblog/base.html" %}
+
+{% block title %} Log in!{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Login</button>
+    </form>
+
+    {% for post in last_post %}
+        <div class="comment">
+            {{ post.post_text }}
+            <div class="info"> Write by <b>{{ post.post_user }}</b>, at {{ post.post_date }} </div>
+        </div>
+    {% endfor %}
+{% endblock %}

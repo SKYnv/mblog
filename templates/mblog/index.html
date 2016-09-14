@@ -1,0 +1,45 @@
+{% extends "mblog/base.html" %}
+
+{% block head %}
+    <script>
+        function counter(el) {
+            var wrapper = document.createElement('DIV');
+            wrapper.innerHTML = el.value;
+            var len = (wrapper.textContent || wrapper.innerText).length;
+            document.getElementById('count').innerHTML = 140 - el.value.length;
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        {# форма добавления коммента #}
+        {#        {{ user.username }}#}
+        {#        <br>{{ user.first_name }} {{ user.last_name }}#}
+        <form action="" method="post">
+            <p>Limit:<span id='count'>140</span></p>
+            <p>{{ form }}</p>
+            <p align="right"><input type="submit" value="send"></p>
+        </form>
+        {# вывод последних постов #}
+    {% else %}
+        {# вывод последних постов для гостей#}
+{#no_authenticated#}
+
+    {% endif %}
+
+    {% for post in last_post %}
+        <div class="comment">
+            {{ post.post_text }}
+            <div class="info"> Write by <b><a href="/{{ post.post_user }}">{{ post.post_user }}</a></b>, at {{ post.post_date }} </div>
+        </div>
+    {% endfor %}
+
+    {% if user is None %}
+     is none
+    {% endif %}
+
+
+
+
+{% endblock %}

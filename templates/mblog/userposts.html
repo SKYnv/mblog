@@ -1,0 +1,24 @@
+{% extends "mblog/base.html" %}
+
+{% block head %}
+    <script>
+        function counter(el) {
+            var wrapper = document.createElement('DIV');
+            wrapper.innerHTML = el.value;
+            var len = (wrapper.textContent || wrapper.innerText).length;
+            document.getElementById('count').innerHTML = 140 - el.value.length;
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    {% for post in user_posts %}
+        <div class="comment">
+            {{ post.post_text }}
+            <div class="info"> Write by <b><a href="/{{ post.post_user }}">{{ post.post_user }}</a></b>,
+                at {{ post.post_date }} </div>
+        </div>
+    {% endfor %}
+
+
+{% endblock %}
