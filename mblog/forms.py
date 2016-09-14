@@ -14,14 +14,3 @@ class LoginForm(forms.Form):
     user_login = forms.CharField(label="your login")
     user_password = forms.CharField(widget=forms.PasswordInput, label="password", min_length=6, max_length=30)
 
-
-class LoginFormView(FormView):
-    form_class = LoginForm
-    success_url = "/"
-
-    # template_name = 'blog/contact.html'
-
-    def form_valid(self, form):
-        self.user = form.get_user()
-        login(self.request, self.user)
-        return super(LoginFormView, self).form_valid(form)
