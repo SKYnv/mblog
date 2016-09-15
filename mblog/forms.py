@@ -9,6 +9,9 @@ class PostForm(forms.Form):
                                      'onkeypress': 'counter(this)', 'onkeyup': 'counter(this)',
                                      'onchange': 'counter(this)'}), max_length=140, label='')
 
+    def clean(self):
+        return self.cleaned_data
+
 
 # class LoginForm(forms.Form):
 #     user_login = forms.CharField(label="your login")

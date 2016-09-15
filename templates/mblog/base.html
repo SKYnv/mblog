@@ -95,6 +95,7 @@
 <div class="wrapper">
     <header class="header">
         {% block header %}
+            <div>
             {% if not user.is_authenticated %}
         <form action="" method="post">
             {% csrf_token %}
@@ -102,6 +103,10 @@
             {{ lform.as_p }}
             <p><input type="submit" value="Login"></p>
         </form>
+                </div>
+                <div align="right">
+                <b>Or you can <a href="/_reg">register</a> a new user!</b>
+                </div>
     {% else %}
         <h3><p>Hi, {{ user.username }}! <a href="/_exit"><b>Logout</b></a></p><h3>
     {% endif %}
