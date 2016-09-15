@@ -10,6 +10,8 @@ class PostForm(forms.Form):
                                      'onchange': 'counter(this)'}), max_length=140, label='')
 
     def clean(self):
+        if self.cleaned_data.get('body_text') == '':
+            raise ValidationError('Post is empty!')
         return self.cleaned_data
 
 
@@ -29,10 +31,10 @@ class LoginForm(forms.Form):
 
 
 class RegisterForm(forms.Form):
-
     user_email = forms.EmailField(label="Email")
     user_password = forms.CharField(widget=forms.PasswordInput, label="password", min_length=6, max_length=30)
-    retype_user_password = forms.CharField(widget=forms.PasswordInput, label="re-type password", min_length=6, max_length=30)
+    retype_user_password = forms.CharField(widget=forms.PasswordInput, label="re-type password", min_length=6,
+                                           max_length=30)
     user_firstname = forms.CharField(label="Your 1st name")
     user_lastname = forms.CharField(label="Your last name")
 
@@ -49,4 +51,3 @@ class RegisterForm(forms.Form):
             pass
 
         return self.cleaned_data
-

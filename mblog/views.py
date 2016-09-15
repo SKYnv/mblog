@@ -1,37 +1,29 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
-from django import forms
 from django.contrib.auth.models import User, AnonymousUser
-from django.views.generic.edit import FormView
-from django.contrib.auth.forms import UserCreationForm
-
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
-
 from django.contrib.auth import authenticate
 from .forms import PostForm, LoginForm, RegisterForm
 from .models import UserPost
 from django.utils import timezone
-from django.core.exceptions import ValidationError
 
-
-# Create your views here.
 
 def getpost(request):
     if request.method == 'POST':
-        text = request.POST['body_text']
-        user = request.user
-        if user is None:
-            return HttpResponseRedirect('/login')
+        form = PostForm(request.POST)
+        if form.is_valid():
+            text = form.cleaned_data.get('body_text')
+            user = request.user
+            if user is None:
+                return HttpResponseRedirect('/login')
 
-        # todo использовать контекст для коммита
-        f = UserPost()
-        f.post_text = text
-        f.post_user = user
-        f.post_date = timezone.now()
-        f.save()
-        return HttpResponseRedirect('/test')
+            f = UserPost()
+            f.post_text = text
+            f.post_user = user
+            f.post_date = timezone.now()
+            f.save()
+            return HttpResponseRedirect('/')
 
 
 def search(request, user_name):
@@ -41,27 +33,6 @@ def search(request, user_name):
     user_posts = UserPost.objects.filter(post_user=post_autor)[:10]
     context = RequestContext(request, {'user_posts': user_posts, 'user': user})
     return HttpResponse(template.render(context))
-
-#
-# def index(request):
-#     template = loader.get_template('mblog/index.html')
-#     user = request.user
-#     last_post = UserPost.objects.order_by('-post_date')[:10]
-#
-#     if user.is_authenticated:
-#         # todo проверка формы
-#         # todo csrf token
-#         # todo переделать на ModelForm
-#         f = PostForm()
-#         context_dict = {'user': user, 'form': f, 'last_post': last_post, }
-#     else:
-#         tt = LoginForm()
-#         context_dict = {'user': user, 'loginform': tt, 'last_post': last_post, }
-#
-#     getpost(request)
-#     context = RequestContext(request, context_dict)
-#
-#     return HttpResponse(template.render(context))
 
 
 def index(request):
@@ -86,43 +57,12 @@ def index(request):
     return render(request, 'mblog/index.html', context_dict)
 
 
-# def exit(request):
-#     logout(request)
-#     return HttpResponseRedirect('/')
-
-
-# class RegisterFormView(FormView):
-#     form_class = UserCreationForm
-#     success_url = "/"
-#     template_name = "mblog/register.html"
-#
-#     def form_valid(self, form):
-#         form.save()
-#         return super(RegisterFormView, self).form_valid(form)
-#
-#
-# class LoginFormView(FormView):
-#     form_class = AuthenticationForm
-#     template_name = "mblog/login.html"
-#     success_url = "/"
-#
-#     def form_valid(self, form):
-#         self.user = form.get_user()
-#         login(self.request, self.user)
-#         return super(LoginFormView, self).form_valid(form)
-
-
-#################
-#################
-
 def user_logout(request):
-
     logout(request)
     return HttpResponseRedirect('/')
 
 
 def user_login(request, name, pwd):
-
     user = authenticate(username=name, password=pwd)
     if user is not AnonymousUser:
         login(request, user)
@@ -146,18 +86,15 @@ def register_user(request):
     if request.method == 'POST':
         rf = RegisterForm(request.POST)
         if rf.is_valid():
-            # test = rf.cleaned_data
             email = rf.cleaned_data.get('user_email')
             pwd = rf.cleaned_data.get('user_password')
-            # pwd = test['user_password']
             fname = rf.cleaned_data.get('user_firstname')
             lname = rf.cleaned_data.get('user_lastname')
-            # return HttpResponse('Форма верна!')
             newuser = User()
             newuser.username = email
             newuser.email = email
             newuser.password = pwd
-            newuser.set_password(pwd)
+            newuser.set_password(pwd)  # иначе аброкадабра в базе
             newuser.first_name = fname
             newuser.last_name = lname
             newuser.save()

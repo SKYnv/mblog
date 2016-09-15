@@ -1,17 +1,17 @@
 {% extends "mblog/base.html" %}
 
 {% block title %}
-Registration
+    Registration
 {% endblock %}
 {% block header %}
     Please fill a form!
 {% endblock %}
 
 {% block content %}
-<form action="" method="post">
-      {% csrf_token %}
-      <!-- as_p для того, чтобы каждый элемент формы был с новой строки -->
-      {{ regform.as_ul }}
-      <button type="submit">Register</button>
+    <form action="" method="post">
+        {% csrf_token %}
+        <!-- as_p для того, чтобы каждый элемент формы был с новой строки -->
+        {{ regform.as_ul }}
+        <button type="submit">Register</button>
     </form>
 {% endblock %}
