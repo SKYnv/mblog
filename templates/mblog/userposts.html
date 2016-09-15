@@ -11,6 +11,11 @@
     </script>
 {% endblock %}
 
+{% block header %}
+    <div align="center"><h2>10 last post created by, <a href="{{ autor }}/profile">{{ autor }}</a>.</h2></div>
+    <p><h3><a href="/">Back to main page.</a></h3></p>
+{% endblock %}
+
 {% block content %}
     {% for post in user_posts %}
         <div class="comment">

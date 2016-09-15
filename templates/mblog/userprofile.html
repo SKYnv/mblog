@@ -1,0 +1,37 @@
+{% extends "mblog/base.html" %}
+
+{% block title %}
+    {{ user.username }} profile!
+{% endblock %}
+{% block header %}
+    <div align="center"><h1> {{ user.username }} profile!</h1></div>
+    <h3><a href="/">Back to main page</a></h3>
+{% endblock %}
+
+{% block content %}
+    <table >
+        <tr>
+            <td>user email</td>
+            <td>{{ user.username }}</td>
+        </tr>
+        <tr>
+            <td>user name</td>
+            <td>{{ user.first_name }} {{ user.last_name }}</td>
+        </tr>
+
+        <tr>
+            <td>user last login</td>
+            <td>{{ user.last_login }}</td>
+        </tr>
+
+        <tr>
+            <td>user permissions</td>
+            <td>{{ user.user_permissions }}</td>
+        </tr>
+        <tr>
+            <td>user date joined</td>
+            <td>{{ user.date_joined }}</td>
+        </tr>
+
+    </table>
+{% endblock %}

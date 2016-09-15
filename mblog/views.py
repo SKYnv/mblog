@@ -26,13 +26,21 @@ def getpost(request):
             return HttpResponseRedirect('/')
 
 
+def userprofile(request, user_name):
+    try:
+        user_name = user_name.replace('/profile','')
+        user = User.objects.get(username=user_name)
+    except:
+        pass
+    return render(request, 'mblog/userprofile.html', {'user': user, })
+
+
 def search(request, user_name):
     user = request.user
     post_autor = User.objects.get(username=user_name)
-    template = loader.get_template('mblog/userposts.html')
-    user_posts = UserPost.objects.filter(post_user=post_autor)[:10]
-    context = RequestContext(request, {'user_posts': user_posts, 'user': user})
-    return HttpResponse(template.render(context))
+    user_posts = UserPost.objects.filter(post_user=post_autor)
+    user_posts = user_posts.order_by('-post_date')[:10]
+    return render(request, 'mblog/userposts.html', {'user_posts': user_posts, 'user': user, 'autor': post_autor})
 
 
 def index(request):
