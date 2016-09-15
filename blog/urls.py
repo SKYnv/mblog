@@ -22,6 +22,6 @@ urlpatterns = [
     url(r'^$', views.index, name="index"),
     url(r'^register/$', views.RegisterFormView.as_view(), name='reg'),
     url(r'^login/$', views.LoginFormView.as_view(), name='login'),
-    url(r'^exit/$', views.exit),
-    url(r'^(?P<user_name>[a-zA-Z_0-9]+)', views.search),
+    url(r'^_exit/', views.user_logout),
+    url(r'^(?P<user_name>[a-zA-Z0-9]+)', views.search),
 ]

@@ -38,7 +38,7 @@
         /* Header
         -----------------------------------------------------------------------------*/
         .header {
-            height: 50px;
+            height: auto;
             background: lightblue;
         {#  text-align: center;#}
         }
@@ -94,25 +94,35 @@
 <div class="wrapper">
     <header class="header">
         {% block header %}
+            {% if not user.is_authenticated %}
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ lform.errors }}
+            {{ lform.as_p }}
+            <p><input type="submit" value="Login"></p>
+        </form>
+    {% else %}
+        <h3><p>Hi, {{ user.username }}! <a href="/_exit"><b>Logout</b></a></p><h3>
+    {% endif %}
 
-            <table>
-                {% if user.is_authenticated %}
-                    <tr>
-                        <td> Welcome, <a href="#"><b>{{ user.username }}</b></a>.</td>
-                        <td><a href="/exit">Logout</a></td>
-                        <td align="right"><a href="/admin">Admin page</a></td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td><a href="/register">Register</a></td>
-                    </tr>
-                    <tr>
-                        <td align="left"><a href="/login">Login</a></td>
-
-                        </td>
-                    </tr>
-                {% endif %}
-            </table>
+{#            <table>#}
+{#                {% if user.is_authenticated %}#}
+{#                    <tr>#}
+{#                        <td> Welcome, <a href="#"><b>{{ user.username }}</b></a>.</td>#}
+{#                        <td><a href="/exit">Logout</a></td>#}
+{#                        <td align="right"><a href="/admin">Admin page</a></td>#}
+{#                    </tr>#}
+{#                {% else %}#}
+{#                    <tr>#}
+{#                        <td><a href="/register">Register</a></td>#}
+{#                    </tr>#}
+{#                    <tr>#}
+{#                        <td align="left"><a href="/login">Login</a></td>#}
+{##}
+{#                        </td>#}
+{#                    </tr>#}
+{#                {% endif %}#}
+{#            </table>#}
 
         {% endblock %}
     </header><!-- .header-->
