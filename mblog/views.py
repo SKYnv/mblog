@@ -28,7 +28,7 @@ def getpost(request):
 
 def userprofile(request, user_name):
     try:
-        user_name = user_name.replace('/profile','')
+        user_name = user_name.replace('/profile', '')
         user = User.objects.get(username=user_name)
     except:
         pass

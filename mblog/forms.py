@@ -15,10 +15,6 @@ class PostForm(forms.Form):
         return self.cleaned_data
 
 
-# class LoginForm(forms.Form):
-#     user_login = forms.CharField(label="your login")
-#     user_password = forms.CharField(widget=forms.PasswordInput, label="password", min_length=6, max_length=30)
-
 class LoginForm(forms.Form):
     user_login = forms.CharField(label="your login")
     user_password = forms.CharField(widget=forms.PasswordInput, label="password", min_length=6, max_length=30)
