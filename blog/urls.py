@@ -20,8 +20,7 @@ from mblog import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.index, name="index"),
-    url(r'^register/$', views.RegisterFormView.as_view(), name='reg'),
-    url(r'^login/$', views.LoginFormView.as_view(), name='login'),
+    url(r'^_reg/', views.register_user, name='reg'),
     url(r'^_exit/', views.user_logout),
     url(r'^(?P<user_name>[a-zA-Z0-9]+)', views.search),
 ]

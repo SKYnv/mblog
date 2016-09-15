@@ -10,14 +10,13 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 
 from django.contrib.auth import authenticate
-from .forms import PostForm, LoginForm
+from .forms import PostForm, LoginForm, RegisterForm
 from .models import UserPost
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
 
 # Create your views here.
-
 
 def getpost(request):
     if request.method == 'POST':
@@ -92,25 +91,25 @@ def index(request):
 #     return HttpResponseRedirect('/')
 
 
-class RegisterFormView(FormView):
-    form_class = UserCreationForm
-    success_url = "/"
-    template_name = "mblog/register.html"
-
-    def form_valid(self, form):
-        form.save()
-        return super(RegisterFormView, self).form_valid(form)
-
-
-class LoginFormView(FormView):
-    form_class = AuthenticationForm
-    template_name = "mblog/login.html"
-    success_url = "/"
-
-    def form_valid(self, form):
-        self.user = form.get_user()
-        login(self.request, self.user)
-        return super(LoginFormView, self).form_valid(form)
+# class RegisterFormView(FormView):
+#     form_class = UserCreationForm
+#     success_url = "/"
+#     template_name = "mblog/register.html"
+#
+#     def form_valid(self, form):
+#         form.save()
+#         return super(RegisterFormView, self).form_valid(form)
+#
+#
+# class LoginFormView(FormView):
+#     form_class = AuthenticationForm
+#     template_name = "mblog/login.html"
+#     success_url = "/"
+#
+#     def form_valid(self, form):
+#         self.user = form.get_user()
+#         login(self.request, self.user)
+#         return super(LoginFormView, self).form_valid(form)
 
 
 #################
@@ -142,12 +141,30 @@ def user_login(request, name, pwd):
         pass
 
 
-class LoginForm(forms.Form):
-    user_login = forms.CharField(label="your login")
-    user_password = forms.CharField(widget=forms.PasswordInput, label="password", min_length=6, max_length=30)
+def register_user(request):
+    rf = RegisterForm()
+    if request.method == 'POST':
+        rf = RegisterForm(request.POST)
+        if rf.is_valid():
+            # test = rf.cleaned_data
+            email = rf.cleaned_data.get('user_email')
+            pwd = rf.cleaned_data.get('user_password')
+            # pwd = test['user_password']
+            fname = rf.cleaned_data.get('user_firstname')
+            lname = rf.cleaned_data.get('user_lastname')
+            # return HttpResponse('Форма верна!')
+            newuser = User()
+            newuser.username = email
+            newuser.email = email
+            newuser.password = pwd
+            newuser.set_password(pwd)
+            newuser.first_name = fname
+            newuser.last_name = lname
+            newuser.save()
+            user_login(request, email, pwd)
+            return HttpResponseRedirect('/')
+        else:
+            rf = RegisterForm()
 
-    def clean(self):
-        name = self.cleaned_data.get('user_login')
-        if not User.objects.filter(username=name):
-            raise ValidationError('Wrong user!')
-        return self.cleaned_data
+    context_dict = {'regform': rf, }
+    return render(request, 'mblog/register.html', context_dict)

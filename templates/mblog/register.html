@@ -3,12 +3,15 @@
 {% block title %}
 Registration
 {% endblock %}
+{% block header %}
+    Please fill a form!
+{% endblock %}
 
 {% block content %}
 <form action="" method="post">
       {% csrf_token %}
       <!-- as_p для того, чтобы каждый элемент формы был с новой строки -->
-      {{ form.as_p }}
+      {{ regform.as_ul }}
       <button type="submit">Register</button>
     </form>
 {% endblock %}
