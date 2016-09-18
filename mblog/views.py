@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.contrib.auth.models import User, AnonymousUser
@@ -10,21 +10,16 @@ from django.utils import timezone
 
 
 def getpost(request):
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            text = form.cleaned_data.get('body_text')
-            user = request.user
-            if user is None:
-                return HttpResponseRedirect('/login')
-
-            f = UserPost()
-            f.post_text = text
-            f.post_user = user
-            f.post_date = timezone.now()
-            f.save()
-            return HttpResponseRedirect('/')
-
+    form = PostForm(request.POST)
+    if form.is_valid():
+        text = form.cleaned_data.get('body_text')
+        user = request.user
+        f = UserPost()
+        f.post_text = text
+        f.post_user = user
+        f.post_date = timezone.now()
+        f.save()
+    return render_to_response('mblog/index.html', {'form': form,})
 
 def userprofile(request, user_name):
     try:
@@ -37,10 +32,13 @@ def userprofile(request, user_name):
 
 def search(request, user_name):
     user = request.user
-    post_autor = User.objects.get(username=user_name)
-    user_posts = UserPost.objects.filter(post_user=post_autor)
-    user_posts = user_posts.order_by('-post_date')[:10]
-    return render(request, 'mblog/userposts.html', {'user_posts': user_posts, 'user': user, 'autor': post_autor})
+    try:
+        post_autor = User.objects.get(username=user_name)
+        user_posts = UserPost.objects.filter(post_user=post_autor)
+        user_posts = user_posts.order_by('-post_date')[:10]
+        return render(request, 'mblog/userposts.html', {'user_posts': user_posts, 'user': user, 'autor': post_autor})
+    except User.DoesNotExist:
+        return HttpResponseRedirect('/404')
 
 
 def index(request):
@@ -48,20 +46,26 @@ def index(request):
     last_post = UserPost.objects.order_by('-post_date')[:10]
 
     if user.is_authenticated:
-        postform = PostForm()
+        if request.POST:
+            postform = PostForm(request.POST)
+            if postform.is_valid():
+                getpost(request)
+                return HttpResponseRedirect('/')
+        else:
+            postform = PostForm()
         context_dict = {'user': user, 'form': postform, 'last_post': last_post}
     else:
-        lform = LoginForm()
+        if request.POST:
+            lform = LoginForm(request.POST)
+            if lform.is_valid():
+                name = lform.cleaned_data['user_login']
+                pwd = lform.cleaned_data['user_password']
+                user_login(request, name, pwd)
+                return HttpResponseRedirect('/')
+        else:
+            lform = LoginForm()
         context_dict = {'user': user, 'last_post': last_post, 'lform': lform}
-    if request.method == 'POST':
-        lform = LoginForm(request.POST)
-        if lform.is_valid():
-            name = lform.cleaned_data['user_login']
-            pwd = lform.cleaned_data['user_password']
-            user_login(request, name, pwd)
-            context_dict = {'user': user, 'last_post': last_post, 'lform': lform}
-            return HttpResponseRedirect('/')
-        getpost(request)
+
     return render(request, 'mblog/index.html', context_dict)
 
 
@@ -102,7 +106,7 @@ def register_user(request):
             newuser.username = email
             newuser.email = email
             newuser.password = pwd
-            newuser.set_password(pwd)  # иначе аброкадабра в базе
+            newuser.set_password(pwd)  # save hashed pwd
             newuser.first_name = fname
             newuser.last_name = lname
             newuser.save()

@@ -1,13 +1,49 @@
-<html>
-<head>
-    {% block head %}
-        <meta charset='utf-8'>
+/* Eric Meyer's CSS Reset */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/* End of Eric Meyer's CSS Reset */
 
-        <title>{% block title %}{% endblock %}</title>
-    {% endblock %}
-{#<link rel="stylesheet" href="{{ STATIC_URL }}static/css/style.css" />#}
-
-    <style>
  html {
             height: 100%;
             background: aliceblue;
@@ -86,50 +122,3 @@
             margin: -5px;
 
         }
-    </style>
-</head>
-<body>
-
-
-<div class="wrapper">
-    <header class="header">
-        {% block header %}
-            <div>
-                {% if not user.is_authenticated %}
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        {{ lform.errors }}
-                        {{ lform.as_p }}
-                        <p><input type="submit" value="Login"></p>
-                    </form>
-                    </div>
-                    <div align="right">
-                        <b>Or you can <a href="/_reg">register</a> a new user!</b>
-                    </div>
-                {% else %}
-                    <div align="center">
-                        <h2><p>Hi, {{ user.username }}!</h2>
-                    </div>
-                    <h3><p><a href="/_exit"><b>Logout</b></a></p></h3>
-                    {% if user.is_staff %}
-                        <h3><p><a href="/_admin"><b>Admin panel</b></a></p></h3>
-                    {% endif %}
-                {% endif %}
-
-        {% endblock %}
-    </header><!-- .header-->
-
-    <main class="content">
-        {% block content %}
-        {% endblock %}
-    </main><!-- .content -->
-
-</div><!-- .wrapper -->
-
-<footer class="footer">
-    {% block footer %}
-        SKYnv 2015.
-    {% endblock %}
-</footer><!-- .footer -->
-</body>
-</html>

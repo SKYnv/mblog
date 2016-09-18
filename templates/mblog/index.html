@@ -9,6 +9,7 @@
             document.getElementById('count').innerHTML = 140 - el.value.length;
         }
     </script>
+
 {% endblock %}
 
 {% block content %}
@@ -16,7 +17,7 @@
         {# форма добавления коммента #}
         {#        {{ user.username }}#}
         {#        <br>{{ user.first_name }} {{ user.last_name }}#}
-        <form action="" method="post">
+        <form action="" method="post" id="post_form_id">
             {% csrf_token %}
             <p>Limit:<span id='count'>140</span></p>
             <p>{{ form }}</p>
